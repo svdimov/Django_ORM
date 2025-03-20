@@ -4,6 +4,7 @@ from tkinter.font import names
 
 import django
 from django.db import connection
+from unicodedata import category
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
@@ -80,5 +81,18 @@ def give_discount():
 
     return '\n'.join(f"{p.name}: {p.price}lv." for p in all_products)
 
+category_instance, _ = Category.objects.get_or_create(name='Food')
 
 
+p1 = [Product(
+    name='Stefan',
+    description='somting',
+    price=30.00,
+    is_available=True,
+    category= category_instance
+
+
+
+)]
+
+Product.objects.bulk_create(p1)

@@ -11,6 +11,7 @@ from typing import List
 from main_app.models import ArtworkGallery, Laptop, ChessPlayer, Meal, Dungeon, Workout
 from django.db.models import Case, When, Value, CharField, QuerySet
 from main_app.choises import LaptopBrand, OperationSystemType, DifficultyChoices, WorkoutTypeChoices
+from populate import populate_model_with_data
 
 
 # Create and check models
@@ -430,37 +431,39 @@ def delete_workouts() -> None:
                             ).delete()
 
 
-# Create two Workout instances
-workout1 = Workout.objects.create(
-    name="Push-Ups",
-    workout_type="Calisthenics",
-    duration="10 minutes",
-    difficulty="Intermediate",
-    calories_burned=200,
-    instructor="Bob"
-)
+# # Create two Workout instances
+# workout1 = Workout.objects.create(
+#     name="Push-Ups",
+#     workout_type="Calisthenics",
+#     duration="10 minutes",
+#     difficulty="Intermediate",
+#     calories_burned=200,
+#     instructor="Bob"
+# )
+#
+# workout2 = Workout.objects.create(
+#     name="Running",
+#     workout_type="Cardio",
+#     duration="30 minutes",
+#     difficulty="High",
+#     calories_burned=400,
+#     instructor="Lilly"
+# )
+#
+# # Run the functions
+# print(show_workouts())
+#
+# high_difficulty_cardio_workouts = get_high_difficulty_cardio_workouts()
+# for workout in high_difficulty_cardio_workouts:
+#     print(f"{workout.name} by {workout.instructor}")
+#
+# set_new_instructors()
+# for workout in Workout.objects.all():
+#     print(f"Instructor: {workout.instructor}")
+#
+# set_new_duration_times()
+# for workout in Workout.objects.all():
+#     print(f"Duration: {workout.duration}")
+#
 
-workout2 = Workout.objects.create(
-    name="Running",
-    workout_type="Cardio",
-    duration="30 minutes",
-    difficulty="High",
-    calories_burned=400,
-    instructor="Lilly"
-)
-
-# Run the functions
-print(show_workouts())
-
-high_difficulty_cardio_workouts = get_high_difficulty_cardio_workouts()
-for workout in high_difficulty_cardio_workouts:
-    print(f"{workout.name} by {workout.instructor}")
-
-set_new_instructors()
-for workout in Workout.objects.all():
-    print(f"Instructor: {workout.instructor}")
-
-set_new_duration_times()
-for workout in Workout.objects.all():
-    print(f"Duration: {workout.duration}")
-
+Dungeon.objects.update(name='Dungeon')
