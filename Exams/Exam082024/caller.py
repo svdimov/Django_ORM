@@ -130,4 +130,7 @@ def decrease_spacecrafts_weight():
         avg_weight = Spacecraft.objects.aggregate(avg_weight=Avg('weight'))['avg_weight']
 
 
-        return f"The weight of {num_of_spacecrafts_affected} spacecrafts has been decreased. The new average weight of all spacecrafts is {avg_weight:.1f}kg"
+        return (f"The weight of "
+                f"{num_of_spacecrafts_affected} "
+                f"spacecrafts has been decreased. The new average weight of all spacecrafts is "
+                f"{avg_weight:.1f}kg")
