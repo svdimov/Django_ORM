@@ -1,109 +1,103 @@
 import os
 import django
-from django.db import connection
 from django.db.models import Q, Count, Avg, F, Case, When, Value
 
-# Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
-# Import your models here
 
-# Create queries within functions
-
-from datetime import date
 from main_app.models import Director, Actor, Movie
 
 
 def get_directors(search_name=None, search_nationality=None):
+    if search_name is None and search_nationality is None:
+        return ''
+
     q_name = Q(full_name__icontains=search_name)
     q_nationality = Q(nationality__icontains=search_nationality)
     if search_name is not None and search_nationality is not None:
-        query = Q(q_name) & Q(q_nationality)
-    elif search_nationality is not None:
-        query = Q(q_nationality)
+        query = q_name & q_nationality
+    elif search_name is not None:
+        query = q_name
     else:
-        query = Q(q_name)
+        query = q_nationality
 
     directors = Director.objects.filter(query).order_by('full_name')
+
     if not directors:
         return ''
 
-    return '\n'.join(f"Director: "
-                     f"{d.full_name}, "
+    return '\n'.join(f"Director: {d.full_name}, "
                      f"nationality: {d.nationality}, "
                      f"experience: {d.years_of_experience}"
                      for d in directors)
 
-
 def get_top_director():
-    top_director = Director.objects.get_directors_by_movies_count().first()
+    director = Director.objects.get_directors_by_movies_count().first()
 
-    if not top_director:
+    if director is None:
         return ''
 
-    return (f"Top Director: "
-            f"{top_director.full_name}, "
-            f"movies: {top_director.number_of_movies}.")
+    return f"Top Director: {director.full_name}, movies: {director.number_of_movies}."
+
 
 def get_top_actor():
-    top_actor = (Actor.objects.prefetch_related('starring_movies')
-                 .annotate(movie_count=Count('starring_movies'),avg_rating=Avg('starring_movies__rating'))
-                 .order_by('-movie_count','full_name')).first()
+    top_actor = ((Actor.objects
+                 .annotate(movies_count=Count('starring_movies')
+                           ,movies_avg_rating=Avg('starring_movies__rating'))
+                 .order_by('-movies_count','full_name'))
+                 .first())
 
 
-
-    if not top_actor or not top_actor.movie_count:
+    if top_actor is None or top_actor.movies_count == 0:
         return ''
 
-    movies_title = ', '.join(t.title for t in top_actor.starring_movies.all())
-    return f"Top Actor: {top_actor.full_name}, starring in movies: {movies_title}, movies average rating: {top_actor.avg_rating:.1f}"
+    movie_title = top_actor.starring_movies.values_list('title', flat=True)
 
-#==========================
+    return (f"Top Actor: {top_actor.full_name}, "
+            f"starring in movies: {', '.join(movie_title)}, "
+            f"movies average rating: {top_actor.movies_avg_rating:.1f}")
+
+
+#+++++++++++++++++++++++++++++++++++++++
+
 
 def get_actors_by_movies_count():
-    actors = (Actor.objects
-              .annotate(movie_count=Count('actors_movies'))
-              .order_by('-movie_count','full_name'))[:3]
+    top_tree_actors = Actor.objects\
+                          .annotate(movies_count=Count('actors_movies'))\
+                          .order_by('-movies_count', 'full_name')[:3]
 
-
-    if not actors or not actors[0].movie_count:
+    if not top_tree_actors or not top_tree_actors[0].movies_count:
         return ''
 
-
-    return '\n'.join(f"{a.full_name}, participated in {a.movie_count} movies" for a in actors)
+    return '\n'.join(f"{actor.full_name}, participated in {actor.movies_count} movies" for actor in top_tree_actors)
 
 
 def get_top_rated_awarded_movie():
-    top_movie = (Movie.objects.select_related('starring_actor')
-                     .prefetch_related('actors')
-                     .filter(is_awarded=True)
-                     .order_by('-rating','title')
-                     .first()
-                     )
-    if top_movie is None:
+
+    movies = Movie.objects.filter(is_awarded=True).order_by('-rating','title').first()
+
+    if movies is None:
         return ''
 
-    starring_actor = top_movie.starring_actor.full_name if top_movie.starring_actor else 'N/A'
-    participating_actor = top_movie.actors.order_by('full_name').values_list('full_name', flat=True)
-    cast = ', '.join(participating_actor)
+    starring_actor_full_name = movies.starring_actor.full_name if movies.starring_actor else 'N/A'
+    cast = ', '.join(movies.actors.values_list('full_name', flat=True))
 
-    return (f"Top rated awarded movie: {top_movie.title},"
-            f" rating: {top_movie.rating:.1f}."
-            f" Starring actor: {starring_actor}."
-            f" Cast: {cast}.")
+    return (f"Top rated awarded movie: {movies.title}, "
+            f"rating: {movies.rating}. "
+            f"Starring actor: {starring_actor_full_name}. "
+            f"Cast: {cast}.")
 
 
 
 
 def increase_rating():
-    rating_to_update = Movie.objects.filter(is_classic=True,rating__lt=10)
-    if not rating_to_update:
+    movies = (Movie.objects
+              .filter(is_classic=True,rating__lt=10)
+              .update(rating=F('rating')+ 0.1,is_classic=True))
+
+    if not movies:
         return "No ratings increased."
 
-    update_movies_count = rating_to_update.count()
-    rating_to_update.update(rating=F('rating') + 0.1,is_classic=True)
-
-    return f"Rating increased for {update_movies_count} movies."
-
+    return f"Rating increased for {movies} movies."
 
