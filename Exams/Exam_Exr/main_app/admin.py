@@ -26,3 +26,4 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['profile', 'total_price', 'creation_date', 'is_completed']
     list_filter = ['is_completed']
     search_fields = ['profile__full_name']
+
