@@ -138,7 +138,7 @@ def get_top_publisher():
 def get_top_main_author():
     author = (Author.objects
               .annotate(books_count=Count('books_author'), books_avg_rating=Avg('books_author__rating'))
-              .filter(books_count__gt=0)  #
+              .filter(books_count__gt=0)
               .order_by('-books_count', 'name')
               .first())
 

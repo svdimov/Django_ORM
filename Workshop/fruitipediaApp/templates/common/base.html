@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=\, initial-scale=1.0"/>
+    <link rel="stylesheet" href="{% static 'styles/styles.css'%}"/>
+    <title>Fruits & Vegetables</title>
+</head>
+<body>
+<div id="wrapper">
+    <header>
+        <!-- Navigation -->
+        <a id="logo" href="{% url 'index' %}">
+            <img id="logo-img" src="{% static 'images/logo2.png' %}" alt="logo"/>
+        </a>
+
+        <nav>
+            <div class="nav-items">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create_category' %}">Create Category</a>
+                    <a href="{% url 'create_fruit' %}">Create Fruit</a>
+                    <a href="{% url 'create_vegetable' %}">Create Vegetables</a>
+                    <a href="{% url 'dashboard' %}">Dashboard Fruits</a>
+                    <a href="{% url 'dashboard2' %}">Dashboard Vegetables</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% if user.is_authenticated %}
+        <!-- Logout Button and Username -->
+        <div class="logout-container">
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+            <p class="username">Welcome, {{ user.username }}!</p>
+        </div>
+        {% endif %}
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</div>
+
+<!-- footer -->
+<footer>
+    <p>Fruits & Vegetables - Dimov Team 2023. All rights reserved.</p>
+</footer>
+</body>
+</html>

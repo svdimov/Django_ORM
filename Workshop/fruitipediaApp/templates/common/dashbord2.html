@@ -1,0 +1,30 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<!-- Dashboard Page -->
+<h2>Vegetables</h2>
+<section id="dashboard2">
+    <!-- Display a div "fruit" with information about each post (if any)-->
+    {% if vegetables %}
+
+        {% for vegetable in vegetables %}
+            <!-- first fruit -->
+            <div class="fruit">
+                <!-- vegetable image -->
+                <img src="{{ vegetable.image_url }}" alt="example1"/>
+                <!-- vegetable name -->
+                <h3 class="title">{{ vegetable.name }}</h3>
+                <!-- vegetable description -->
+                <p class="description">{{ vegetable.description|truncatechars:15 }}</p>
+                <!-- vegetable details button -->
+                <a class="details-btn" href="{% url 'vegetables-detail' vegetable.id %}">More Info</a>
+            </div>
+        {% endfor %}
+</section>
+
+<!-- Display a heading if there are no posts -->
+    {% else %}
+<h2>No vegetables info yet.</h2>
+    {% endif %}
+
+{% endblock %}
