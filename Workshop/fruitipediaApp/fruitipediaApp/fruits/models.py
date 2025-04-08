@@ -13,6 +13,12 @@ class Category(models.Model):
 
 
 class Fruit(models.Model):
+    class Meta:
+        permissions = [
+            ("can_add_fruit", "Can add fruit"),
+            ("can_delete_fruit", "Can delete fruit"),
+        ]
+
     name = models.CharField(
         max_length=30,
         validators=[

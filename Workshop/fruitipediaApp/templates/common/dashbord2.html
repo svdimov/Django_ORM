@@ -3,7 +3,11 @@
 {% block content %}
 <!-- Dashboard Page -->
 <h2>Vegetables</h2>
-<section id="dashboard2">
+    <form method="GET" action="{% url 'dashboard2' %}">
+    <input type="text" name="q" placeholder="Search vegetables..." value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+<section id="dashboard">
     <!-- Display a div "fruit" with information about each post (if any)-->
     {% if vegetables %}
 
@@ -15,7 +19,7 @@
                 <!-- vegetable name -->
                 <h3 class="title">{{ vegetable.name }}</h3>
                 <!-- vegetable description -->
-                <p class="description">{{ vegetable.description|truncatechars:15 }}</p>
+                <p class="description">{{ vegetable.nutrition }} $</p>
                 <!-- vegetable details button -->
                 <a class="details-btn" href="{% url 'vegetables-detail' vegetable.id %}">More Info</a>
             </div>

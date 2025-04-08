@@ -16,17 +16,25 @@ def index_view(request):
 
 @login_required
 def dashboard_view(request):
+    query = request.GET.get('q', '')
     fruits = Fruit.objects.all()
+    if query:
+        # Filter fruits based on the search query
+        fruits = fruits.filter(name__icontains=query)
 
-    context = {'fruits': fruits,}
+    context = {'fruits': fruits,'query': query}
 
     return render(request, 'common/dashboard.html', context)
 
 @login_required
 def dashboard2_view(request):
+    query = request.GET.get('q', '')
     vegetables = Vegetables.objects.all()
+    if query:
+        # Filter fruits based on the search query
+        vegetables = vegetables.filter(name__icontains=query)
 
-    context = {'vegetables': vegetables, }
+    context = {'vegetables': vegetables,'query': query }
 
     return render(request, 'common/dashbord2.html', context)
 

@@ -136,3 +136,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
+
+
+# Set session to expire after 20 minutes (in seconds)
+SESSION_COOKIE_AGE = 20 * 60  # 20 minutes
+
+# Optional: End the session when the browser closes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Optional: Only refresh session on activity
+SESSION_SAVE_EVERY_REQUEST = True
