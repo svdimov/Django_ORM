@@ -46,7 +46,7 @@ def dashboard2_view(request):
 
     context = {'vegetables': vegetables,'query': query }
 
-    return render(request, 'common/dashbord2.html', context)
+    return render(request, 'common/dashboard2.html', context)
 
 @login_required
 def create_fruit_view(request):

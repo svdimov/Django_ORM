@@ -36,5 +36,5 @@ urlpatterns = [
         path('delete-vegetables/', delete_vegetables_view, name='delete-vegetables'),
 
     ])),
-    path('', views.index_view, name='index'),
+
 ]
