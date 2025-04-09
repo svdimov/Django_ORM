@@ -28,8 +28,8 @@ class Fruit(models.Model):
 
     )
     image_url = models.URLField()
-    description = models.TextField()
-    nutrition = models.TextField(null=True, blank=True)
+    quantity = models.DecimalField(decimal_places=2, max_digits=10)
+    price = models.DecimalField(decimal_places=2, max_digits=10)
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
@@ -48,8 +48,8 @@ class Vegetables(models.Model):
 
     )
     image_url = models.URLField()
-    description = models.TextField()
-    nutrition = models.TextField(null=True, blank=True)
+    quantity = models.DecimalField(decimal_places=2, max_digits=10)
+    price = models.DecimalField(decimal_places=2, max_digits=10)
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,

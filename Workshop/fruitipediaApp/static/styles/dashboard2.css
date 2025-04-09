@@ -15,7 +15,7 @@
   color: rgb(241, 133, 10);
 }
 
-.fruit {
+.vegetables {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,11 +37,11 @@
 /* .fruit:hover {
   transform: scale(1.3);
 } */
-.fruit img {
+.vegetables img {
   height:12vw;
 }
 
-.fruit .title {
+.vegetables .title {
   margin: 0;
   letter-spacing: 2px;
   color: rgb(95, 94, 94);
@@ -61,7 +61,7 @@
 .details-btn:hover {
   background: #bd2c2c;
 }
-.fruit p {
+.vegetables p {
   margin: auto;
   font-size: 0.7rem;
   font-weight: 500;

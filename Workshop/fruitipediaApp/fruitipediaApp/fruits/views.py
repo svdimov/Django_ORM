@@ -12,8 +12,18 @@ from .forms import CategoryForm, FruitAddForm, FruitEditForm, DeleteFruitForm, V
 
 @login_required
 def index_view(request):
-    return render(request, 'common/index.html')
+    query = request.GET.get('q', '')
 
+    fruits = Fruit.objects.filter(name__icontains=query) if query else Fruit.objects.all()
+    vegetables = Vegetables.objects.filter(name__icontains=query) if query else Vegetables.objects.all()
+
+    context = {
+        'query': query,
+        'fruits': fruits,
+        'vegetables': vegetables,
+    }
+
+    return render(request, 'common/index.html', context)
 @login_required
 def dashboard_view(request):
     query = request.GET.get('q', '')

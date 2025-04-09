@@ -17,7 +17,7 @@
             <div class="fruit">
                 <img src="{{ fruit.image_url }}" alt="example1"/>
                 <h3 class="title">{{ fruit.name }}</h3>
-                <p class="description">{{ fruit.nutrition}} $</p>
+                <p class="description">{{ fruit.price}} $</p>
                 <a class="details-btn" href="{% url 'fruit_detail' fruit.id %}">More Info</a>
             </div>
         {% endfor %}
