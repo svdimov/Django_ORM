@@ -19,6 +19,8 @@
                 <h3 class="title">{{ fruit.name }}</h3>
                 <p class="description">{{ fruit.price}} $</p>
                 <a class="details-btn" href="{% url 'fruit_detail' fruit.id %}">More Info</a>
+
+
             </div>
         {% endfor %}
     {% else %}

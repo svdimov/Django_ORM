@@ -1,4 +1,5 @@
-from django.core.validators import MinLengthValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from .validators import  only_letters_validator
 
@@ -37,6 +38,8 @@ class Fruit(models.Model):
         null=True,
         blank=True
     )
+    def __str__(self):
+        return self.name
 
 class Vegetables(models.Model):
     name = models.CharField(
@@ -57,4 +60,14 @@ class Vegetables(models.Model):
         null=True,
         blank=True
     )
+
+class Order(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    fruit = models.ForeignKey(Fruit, null=True, blank=True, on_delete=models.CASCADE)
+    vegetable = models.ForeignKey(Vegetables, null=True, blank=True, on_delete=models.CASCADE)
+    quantity = models.DecimalField(decimal_places=2, max_digits=10,validators=[MinValueValidator(0.01)]) # it is kilograms
 

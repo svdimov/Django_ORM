@@ -48,7 +48,7 @@
   text-decoration: underline;
 }
 
-.details-btn {
+#dashboard .fruit .details-btn {
   margin-top: 4px;
   text-decoration: none;
   font-size: 21px;
@@ -58,7 +58,7 @@
   color: white;
   background: rgb(240, 156, 47);
 }
-.details-btn:hover {
+#dashboard .fruit .details-btn:hover {
   background: #bd2c2c;
 }
 .fruit p {

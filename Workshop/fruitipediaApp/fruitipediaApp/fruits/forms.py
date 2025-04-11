@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.views import LoginView
 
-from .models import Category, Fruit, Vegetables
+from .models import Category, Fruit, Vegetables, OrderItem
 
 
 class CategoryBaseForm(forms.ModelForm):
@@ -53,4 +53,14 @@ class DeleteVegetablesForm(VegetablesBaseForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.disabled = True
+
+
+
+
+
+class OrderItemForm(forms.ModelForm):
+    class Meta:
+        model = OrderItem
+        fields = ['quantity', ]
+
 

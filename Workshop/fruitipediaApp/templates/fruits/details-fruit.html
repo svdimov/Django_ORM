@@ -42,6 +42,7 @@
             <div id="action-buttons">
                 <a href="{% url 'edit_fruit' fruit.id %}" id="edit-btn">Edit</a>
                 <a href="{% url 'delete_fruit' fruit.id %}" id="delete-btn">Delete</a>
+                <a href="{% url 'create_order' pk=fruit.id %}" id="order-btn">Order</a>
             </div>
         </div>
     </div>

@@ -1,0 +1,19 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<h2>Order Successful!</h2>
+
+<ul>
+    {% for item in order.items.all %}
+        <li>
+            {% if item.fruit %}
+                {{ item.fruit.name }} - {{ item.quantity }} kg - {{ item.fruit.price }} $/kg
+            {% elif item.vegetable %}
+                {{ item.vegetable.name }} - {{ item.quantity }} kg - {{ item.vegetable.price }} $/kg
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'create_order' pk=order.id %}">Create another order</a>
+{% endblock %}

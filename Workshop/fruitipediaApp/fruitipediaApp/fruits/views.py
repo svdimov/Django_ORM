@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.db.models import Q
 
-from django.shortcuts import render, redirect
-from .models import Fruit, Category,Vegetables
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Fruit, Category, Vegetables, Order
 
 from .forms import CategoryForm, FruitAddForm, FruitEditForm, DeleteFruitForm, VegetablesEditForm, DeleteVegetablesForm, \
-    VegetablesAddForm
+    VegetablesAddForm, OrderItemForm
 
 
 # Create your views here.
@@ -13,9 +14,10 @@ from .forms import CategoryForm, FruitAddForm, FruitEditForm, DeleteFruitForm, V
 @login_required
 def index_view(request):
     query = request.GET.get('q', '')
-
-    fruits = Fruit.objects.filter(name__icontains=query) if query else Fruit.objects.all()
-    vegetables = Vegetables.objects.filter(name__icontains=query) if query else Vegetables.objects.all()
+    q_name = Q(name__icontains=query)
+    q_id = Q(id__icontains=query)
+    fruits = Fruit.objects.filter(q_name | q_id) if query else Fruit.objects.all()
+    vegetables = Vegetables.objects.filter(q_name | q_id) if query else Vegetables.objects.all()
 
     context = {
         'query': query,
@@ -30,7 +32,9 @@ def dashboard_view(request):
     fruits = Fruit.objects.all()
     if query:
         # Filter fruits based on the search query
-        fruits = fruits.filter(name__icontains=query)
+        q_name = Q(name__icontains=query)
+        q_id = Q(id__icontains=query)
+        fruits = fruits.filter(q_name | q_id)
 
     context = {'fruits': fruits,'query': query}
 
@@ -42,7 +46,9 @@ def dashboard2_view(request):
     vegetables = Vegetables.objects.all()
     if query:
         # Filter fruits based on the search query
-        vegetables = vegetables.filter(name__icontains=query)
+        q_name = Q(name__icontains=query)
+        q_id = Q(id__icontains=query)
+        vegetables = vegetables.filter(q_name | q_id)
 
     context = {'vegetables': vegetables,'query': query }
 
@@ -164,10 +170,35 @@ def delete_vegetables_view(request, pk):
 
     return render(request, 'vegetables/delete-vegetables.html', context)
 
+# views.py
 
+def create_order(request, pk):
+    # Fetch the fruit that the user wants to order
+    fruit = get_object_or_404(Fruit, pk=pk)
 
+    if request.method == 'POST':
+        form = OrderItemForm(request.POST)
+        if form.is_valid():
+            # Create a new Order
+            order = Order.objects.create()  # Create an order without passing fruit or quantity here
+            # Now create the order item and associate it with the order
+            order_item = form.save(commit=False)
+            order_item.order = order  # Set the order relationship
+            order_item.fruit = fruit  # Set the fruit for this order item
+            order_item.save()
 
+            # Redirect to the success page or wherever you need to go
+            return redirect('order_success', order_id=order.id)
+    else:
+        form = OrderItemForm()
 
+    return render(request, 'orders/create_order.html', {'form': form, 'fruit': fruit})
 
+@login_required
+def order_success(request, order_id):
 
+    # Get the order object
+    order = get_object_or_404(Order, id=order_id)
 
+    # Pass the order to the template
+    return render(request, 'orders/order_success.html', {'order': order})
