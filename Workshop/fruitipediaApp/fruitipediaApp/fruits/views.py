@@ -172,9 +172,10 @@ def delete_vegetables_view(request, pk):
 
 # views.py
 
-def create_order(request, pk):
+def create_fruit_order(request, pk):
     # Fetch the fruit that the user wants to order
     fruit = get_object_or_404(Fruit, pk=pk)
+
 
     if request.method == 'POST':
         form = OrderItemForm(request.POST)
@@ -185,6 +186,7 @@ def create_order(request, pk):
             order_item = form.save(commit=False)
             order_item.order = order  # Set the order relationship
             order_item.fruit = fruit  # Set the fruit for this order item
+
             order_item.save()
 
             # Redirect to the success page or wherever you need to go
@@ -193,6 +195,25 @@ def create_order(request, pk):
         form = OrderItemForm()
 
     return render(request, 'orders/create_order.html', {'form': form, 'fruit': fruit})
+
+def create_vegetable_order(request, pk):
+    vegetable = get_object_or_404(Vegetables, pk=pk)
+
+    if request.method == 'POST':
+        form = OrderItemForm(request.POST)
+        if form.is_valid():
+            order = Order.objects.create()
+            order_item = form.save(commit=False)
+            order_item.order = order
+            order_item.vegetable = vegetable
+            order_item.save()
+
+            return redirect('order_success', order_id=order.id)
+    else:
+        form = OrderItemForm()
+
+    return render(request, 'orders/create_vegetable_order.html', {'form': form, 'vegetable': vegetable})
+
 
 @login_required
 def order_success(request, order_id):

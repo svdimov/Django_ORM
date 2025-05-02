@@ -1,0 +1,15 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+  <h2>Order {{ vegetable.name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="place-order">Place Order</button>
+  </form>
+     <div class="vegetable-details">
+      <p>Price: ${{ vegetable.price }}</p>
+      <p>Available Quantity: {{ vegetable.quantity }} KG</p>
+      <p>Description: {{ vegetable.description }}</p>
+  </div>
+{% endblock %}

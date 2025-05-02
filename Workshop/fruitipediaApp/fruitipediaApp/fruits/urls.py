@@ -37,7 +37,9 @@ urlpatterns = [
 
 
     ])),
-    path('order/<int:pk>/', views.create_order, name='create_order'),
+    path('order/<int:pk>/', views.create_fruit_order, name='create_order'),
+    path('vegetables/order/<int:pk>/', views.create_vegetable_order, name='create_vegetable_order'),
     path('order/success/<int:order_id>/', views.order_success, name='order_success'),
+
 
 ]
